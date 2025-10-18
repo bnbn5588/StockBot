@@ -1,0 +1,7 @@
+requests
+schedule
+time
+datetime
+os
+json
+python-dotenv
