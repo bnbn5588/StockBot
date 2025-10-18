@@ -48,7 +48,7 @@ def get_analysis(ticker):
 # ----- FUNCTION: Build daily summary -----
 def daily_summary():
     summary_lines = [f"📈 Daily Summary ({datetime.now().strftime('%Y-%m-%d')})"]
-
+    log_lines = [f"📈 Daily Summary ({datetime.now().strftime('%Y-%m-%d')})"]
     for t in TICKER:
         result = get_analysis(t)
         if "error" in result:
@@ -67,11 +67,12 @@ def daily_summary():
                 f"{reco_emoji} {t} | "
                 f"💰 Price: ${price:.2f}"
             )
+            log_lines.append(f"{t}: Recommendation - {reco}, Price - ${price:.2f}")
 
     message = "\n".join(summary_lines)
-    print(message)
+    print(log_lines)
     send_line(message)
     print(f"[{datetime.now()}] Summary sent to LINE")
     
-    
+
 daily_summary()
