@@ -74,9 +74,4 @@ def daily_summary():
     print(f"[{datetime.now()}] Summary sent to LINE")
     
     
-# Schedule it at 09:00 every day
-schedule.every().day.at("09:00").do(daily_summary)
-
-while True:
-    schedule.run_pending()
-    time.sleep(60)
+daily_summary()
