@@ -1,10 +1,9 @@
 import requests
-import schedule
-import time
 from datetime import datetime
 import os
 import json
 from dotenv import load_dotenv
+from zoneinfo import ZoneInfo
 
 # Load variables from .env
 load_dotenv()
@@ -47,8 +46,12 @@ def get_analysis(ticker):
     
 # ----- FUNCTION: Build daily summary -----
 def daily_summary():
-    summary_lines = [f"📈 Daily Summary ({datetime.now().strftime('%Y-%m-%d')})"]
-    log_lines = [f"📈 Daily Summary ({datetime.now().strftime('%Y-%m-%d')})"]
+    # Bangkok timezone
+    tz_bkk = ZoneInfo("Asia/Bangkok")
+    now_bkk = datetime.now(tz=tz_bkk)
+
+    summary_lines = [f"📈 Daily Summary ({now_bkk.strftime('%Y-%m-%d')})"]
+    log_lines = [f"📈 Daily Summary ({now_bkk})"]
     for t in TICKER:
         result = get_analysis(t)
         if "error" in result:
@@ -72,7 +75,7 @@ def daily_summary():
     message = "\n".join(summary_lines)
     print(log_lines)
     send_line(message)
-    print(f"[{datetime.now()}] Summary sent to LINE")
+    print(f"[{datetime.now(tz=tz_bkk)}] Summary sent to LINE")
     
 
 daily_summary()
