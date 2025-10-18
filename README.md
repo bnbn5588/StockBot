@@ -48,13 +48,13 @@ python bot.py
 1. Build the Docker image:
 
 ```sh
-docker build -t stock-analysis-bot .
+docker build -t stockbot:latest .
 ```
 
 2. Run the container:
 
 ```sh
-docker run -d stock-analysis-bot
+docker run -d stockbot
 ```
 
 ## Output Format
