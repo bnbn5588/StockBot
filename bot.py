@@ -10,7 +10,7 @@ load_dotenv()
 
 # ----- CONFIG -----
 # TICKER = ["AAPL", "ORCL", "AMZN", "CRM", "MSFT", "GOOGL", "META", "TSLA", "NVDA", "AMD", "CONY"]
-TICKER = ["AAPL", "ORCL", "AMZN", "MSFT", "GOOGL", "NVDA", "AMD"]
+TICKER = ["AAPL", "ORCL", "AMZN", "MSFT", "GOOGL", "META", "NVDA", "AMD", "TSM", "MU"]
 LINE_TOKEN = os.getenv("LINE_TOKEN")
 API_KEY = os.getenv("API_KEY")
 ANALYSIS_API = os.getenv("ANALYSIS_API")
