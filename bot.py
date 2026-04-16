@@ -67,19 +67,23 @@ def daily_summary():
             summary_lines.append(f"❌ {t}: Error - {result['error']}")
         else:
             # Extract top-level info
-            reco = result.get("recommendation", "unknown")
-            #details = result.get("details", {})
-            latest = result.get("latest_data", {})
-            
-            price = latest.get(f"Close_{t}", "-")
-            emoji_map = {"BUY": "🟢", "SELL": "🔴", "Neutral": "🟡"}
+            reco          = result.get("recommendation", "HOLD")
+            strength      = result.get("strength", "")
+            confidence    = result.get("confidence", 0)
+            trend_strength = result.get("trend_strength", "")
+            latest        = result.get("latest_data", {})
+
+            raw_price = latest.get(f"Close_{t}")
+            price_str = f"${float(raw_price):.2f}" if raw_price is not None else "-"
+
+            emoji_map  = {"BUY": "🟢", "SELL": "🔴", "HOLD": "🟡"}
             reco_emoji = emoji_map.get(reco.upper(), "⚪")
-            
+
             summary_lines.append(
-                f"{reco_emoji} {t} | "
-                f"💰 Price: ${price:.2f}"
+                f"{reco_emoji} {t} | 💰 {price_str}\n"
+                f"   ➤ {reco} ({strength}, {confidence}%) | {trend_strength}"
             )
-            log_lines.append(f"{t}: Recommendation - {reco}, Price - ${price:.2f}")
+            log_lines.append(f"{t}: {reco} ({strength}, {confidence}%) | {trend_strength} | Price {price_str}")
 
     message = "\n".join(summary_lines)
     print(log_lines)
