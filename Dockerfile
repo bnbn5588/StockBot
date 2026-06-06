@@ -7,5 +7,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
+RUN adduser --disabled-password --gecos "" botuser
+USER botuser
+
 # Use CMD to run once and exit (scheduler will trigger container)
 CMD ["python", "bot.py"]
