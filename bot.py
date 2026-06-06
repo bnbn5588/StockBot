@@ -10,25 +10,17 @@ import pandas as pd
 load_dotenv()
 
 # ----- CONFIG -----
-# TICKER = ["AAPL", "ORCL", "AMZN", "CRM", "MSFT", "GOOGL", "META", "TSLA", "NVDA", "AMD", "CONY"]
-# TICKER = ["AAPL", "ORCL", "AMZN", "MSFT", "GOOGL", "META", "NVDA", "AMD", "TSM", "MU"]
 LINE_TOKEN = os.getenv("LINE_TOKEN")
 API_KEY = os.getenv("API_KEY")
 ANALYSIS_API = os.getenv("ANALYSIS_API")
 SHEET_ID = os.getenv("GOOGLE_SHEET_ID")
 SHEET_NAME = os.getenv("TICKER_SHEET_NAME")
 
-# Get the ticker list from Google Sheets
-csv_url = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/gviz/tq?tqx=out:csv&sheet={SHEET_NAME}"
-# Read data into a DataFrame
-df = pd.read_csv(csv_url)
-TICKER = df.iloc[:, 0].dropna().tolist()
-
 # ----- FUNCTION: ส่ง LINE -----
 def send_line(msg):
     url = "https://api.line.me/v2/bot/message/broadcast"
     headers = {"Content-Type": "application/json", "Authorization": f"Bearer {LINE_TOKEN}"}
-    
+
     payload = {
         "messages": [
             {
@@ -39,6 +31,7 @@ def send_line(msg):
     }
 
     res = requests.post(url, headers=headers, data=json.dumps(payload))
+    res.raise_for_status()
     print(f"LINE push status: {res.status_code}, response: {res.text}")
     
 # ----- FUNCTION: Fetch analysis from API -----
@@ -58,6 +51,15 @@ def daily_summary():
     # Bangkok timezone
     tz_bkk = ZoneInfo("Asia/Bangkok")
     now_bkk = datetime.now(tz=tz_bkk)
+
+    # Fetch ticker list from Google Sheets
+    try:
+        csv_url = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/gviz/tq?tqx=out:csv&sheet={SHEET_NAME}"
+        df = pd.read_csv(csv_url)
+        TICKER = df.iloc[:, 0].dropna().tolist()
+    except Exception as e:
+        send_line(f"❌ Failed to load ticker list: {e}")
+        return
 
     summary_lines = [f"📈 Daily Summary ({now_bkk.strftime('%Y-%m-%d')})"]
     log_lines = [f"📈 Daily Summary ({now_bkk})"]
@@ -89,6 +91,7 @@ def daily_summary():
     print(log_lines)
     send_line(message)
     print(f"[{datetime.now(tz=tz_bkk)}] Summary sent to LINE")
-    
 
-daily_summary()
+
+if __name__ == "__main__":
+    daily_summary()
