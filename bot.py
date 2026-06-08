@@ -79,10 +79,10 @@ def daily_summary():
     tz_bkk = ZoneInfo("Asia/Bangkok")
     now_bkk = datetime.now(tz=tz_bkk)
 
-    # Skip weekends — US markets are closed Sat/Sun
-    if now_bkk.weekday() >= 5:
-        print(f"[{now_bkk}] Weekend — skipping.")
-        return
+    # # Skip weekends — US markets are closed Sat/Sun
+    # if now_bkk.weekday() >= 5:
+    #     print(f"[{now_bkk}] Weekend — skipping.")
+    #     return
 
     # Fetch ticker list from Google Sheets
     try:

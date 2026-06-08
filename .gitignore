@@ -34,8 +34,11 @@ ENV/
 # Environment variables
 .env
 
+# Google service account key
+credentials.json
+
 # Logs
-*.log
+*.log*
 
 # Local development
 .DS_Store
