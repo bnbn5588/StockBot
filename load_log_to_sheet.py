@@ -12,7 +12,7 @@ CREDS_FILE    = os.getenv("GOOGLE_CREDENTIALS_FILE", "credentials.json")
 HISTORY_SHEET = os.getenv("HISTORY_SHEET_NAME", "history")
 LOG_FILE      = sys.argv[1] if len(sys.argv) > 1 else "stockbot.log.gz"
 
-HEADER = ["Date", "Ticker", "Recommendation", "Strength", "Confidence", "Trend Strength", "Price"]
+HEADER = ["Datetime", "Ticker", "Recommendation", "Strength", "Confidence", "Trend Strength", "Price"]
 
 # New format: "AAPL: BUY (Weak, 47.4%) | Strong (ADX: 63.09) | Price $308.33"
 TICKER_RE_NEW = re.compile(
@@ -41,11 +41,11 @@ def parse_log(path):
                 parts = ast.literal_eval(line)
             except Exception:
                 continue
-            # Header element: "📈 Daily Summary (2024-01-15 08:01:23.456789+07:00)"
-            date_match = re.search(r"\((\d{4}-\d{2}-\d{2})", parts[0])
-            if not date_match:
+            # Header element: "📈 Daily Summary (2026-06-08 08:00:11.743748+07:00)"
+            dt_match = re.search(r"\((\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})", parts[0])
+            if not dt_match:
                 continue
-            date = date_match.group(1)
+            date = dt_match.group(1)
             for item in parts[1:]:
                 m = TICKER_RE_NEW.match(item)
                 if m:
@@ -77,9 +77,9 @@ def upload(records):
         ws.append_row(HEADER, value_input_option="USER_ENTERED")
         existing_keys = set()
     else:
-        existing_keys = {(r[0], r[1]) for r in existing[1:] if len(r) >= 2}
+        existing_keys = {(r[0][:10], r[1]) for r in existing[1:] if len(r) >= 2}
 
-    new_records = [r for r in records if (r[0], r[1]) not in existing_keys]
+    new_records = [r for r in records if (r[0][:10], r[1]) not in existing_keys]
 
     if new_records:
         ws.append_rows(new_records, value_input_option="USER_ENTERED")

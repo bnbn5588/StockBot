@@ -94,6 +94,7 @@ def daily_summary():
         return
 
     today = now_bkk.strftime("%Y-%m-%d")
+    datetime_str = now_bkk.strftime("%Y-%m-%d %H:%M:%S")
     summary_lines = [f"📈 Daily Summary ({today})"]
     log_lines = [f"📈 Daily Summary ({now_bkk})"]
     urgent_lines = []
@@ -121,7 +122,7 @@ def daily_summary():
             )
             summary_lines.append(line)
             log_lines.append(f"{t}: {reco} ({strength}, {confidence}%) | {trend_strength} | Price {price_str}")
-            history_records.append([today, t, reco, strength, confidence, trend_strength, price_str])
+            history_records.append([datetime_str, t, reco, strength, confidence, trend_strength, price_str])
 
             if reco.upper() in ("BUY", "SELL") and confidence >= 70:
                 urgent_lines.append(line)
