@@ -110,7 +110,7 @@ def daily_summary():
             trend_strength = result.get("trend_strength", "")
             latest         = result.get("latest_data", {})
 
-            raw_price = latest.get(f"Close_{t}")
+            raw_price = latest.get("Close")
             price_str = f"${float(raw_price):.2f}" if raw_price is not None else "-"
 
             emoji_map  = {"BUY": "🟢", "SELL": "🔴", "HOLD": "🟡"}
